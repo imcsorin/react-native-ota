@@ -2615,7 +2615,7 @@ __metadata:
     react: "*"
     react-native: "*"
   bin:
-    react-native-ota-release: ./bin/react-native-ota-release.mjs
+    react-native-ota-release: ./bin/react-native-ota-release
   languageName: unknown
   linkType: soft
 
