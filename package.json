@@ -1,6 +1,6 @@
 {
   "name": "@imcsorin/react-native-ota",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "OTA updates for React Native",
   "main": "./lib/module/library/index.js",
   "types": "./lib/typescript/src/library/index.d.ts",
@@ -156,7 +156,9 @@
   },
   "release-it": {
     "git": {
-      "commitArgs": ["-a"]
+      "commitArgs": [
+        "-a"
+      ]
     },
     "npm": {
       "publish": true,
