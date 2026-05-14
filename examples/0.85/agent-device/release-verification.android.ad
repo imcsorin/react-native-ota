@@ -1,0 +1,14 @@
+context platform=android
+context timeout=60000
+
+open imcsorin.reactnativeota.example --relaunch
+wait text "Release Verification" 5000
+snapshot -i -c
+wait text "Bundle label: embedded-v1" 3000
+wait text "PNG asset: loaded" 3000
+wait text "Overall: PASS" 3000
+scroll down
+wait text "SVG asset: loaded" 3000
+wait text "Broken asset: failed" 3000
+screenshot ${AD_ARTIFACTS}/release-verification-android.png
+close
