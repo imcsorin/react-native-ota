@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+// npm rejects .mjs bin entries, so this extension-less CJS shim dynamically imports the actual entrypoint.
+import('./react-native-ota-release.mjs').catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

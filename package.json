@@ -5,7 +5,7 @@
   "main": "./lib/module/library/index.js",
   "types": "./lib/typescript/src/library/index.d.ts",
   "bin": {
-    "react-native-ota-release": "./bin/react-native-ota-release.mjs"
+    "react-native-ota-release": "./bin/react-native-ota-release"
   },
   "exports": {
     ".": {
