@@ -155,7 +155,9 @@
     ]
   },
   "release-it": {
-    "git": true,
+    "git": {
+      "commitArgs": ["-a"]
+    },
     "npm": {
       "publish": true,
       "skipChecks": true
