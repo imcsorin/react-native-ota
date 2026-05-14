@@ -25,35 +25,37 @@ A bundle stays pending until React renders content and a 3-second grace period p
 
 ## Install
 
-Install the package in your React Native app:
+### Automatic (recommended)
 
-```sh
-npm install @imcsorin/react-native-ota
-```
-
-Or let the CLI add the package, patch the native host files, and run CocoaPods:
+Run the installer — it installs the package, writes `publicUrlBase` to your `package.json`, patches the native startup files, and runs CocoaPods:
 
 ```sh
 npx react-native-ota-release install \
   --public-url-base https://cdn.example.com/mobile/prod
 ```
 
-If your app uses iOS, install pods after adding the package:
+See [install options](#install-options) for all flags.
+
+### Manual install
+
+Install the package yourself, configure `publicUrlBase` in `package.json`, and wire the native startup in `AppDelegate.swift` and `MainApplication.kt`.
+
+<details>
+<summary>Steps</summary>
+
+**1. Install the package**
+
+```sh
+npm install @imcsorin/react-native-ota
+```
+
+For iOS, run pods after:
 
 ```sh
 cd ios && pod install
 ```
 
-React Native autolinking handles native module registration. The only manual step is wiring the native startup — or letting `install` do it for you.
-
-The install command automates startup wiring for the current React Native Swift/Kotlin host templates by updating:
-
-- `ios/**/AppDelegate.swift`
-- `android/app/src/main/java/**/MainApplication.kt`
-
-## Enable OTA in your app
-
-### 1. Configure the public OTA URL base in your app `package.json`
+**2. Set `publicUrlBase` in your app `package.json`**
 
 This is the only supported configuration surface. Do **not** add OTA config to `Info.plist` or `AndroidManifest.xml`.
 
@@ -65,17 +67,9 @@ This is the only supported configuration surface. Do **not** add OTA config to `
 }
 ```
 
-The native runtime reads this from a build artifact generated from your `package.json` at build time, then fetches the platform manifest at:
+**3. Wire the native startup**
 
-```text
-<publicUrlBase>/manifests/<platform>/<binaryVersion>.json
-```
-
-### 2. Wire the native startup flow
-
-#### iOS
-
-Add the import and override `bundleURL()` in your `RCTDefaultReactNativeFactoryDelegate` subclass:
+**iOS** — add the import and override `bundleURL()` in your `RCTDefaultReactNativeFactoryDelegate` subclass:
 
 ```swift
 import ReactNativeOta
@@ -91,9 +85,7 @@ override func bundleURL() -> URL? {
 
 `bundleURL()` restores persisted OTA state, starts the background update check, and returns the URL for React Native to load.
 
-#### Android
-
-Add the import and override `getJSBundleFile()` inside your `DefaultReactNativeHost`. Pass the `invalidateReactHost` lambda so the controller can clear the cached `ReactHost` before reloading:
+**Android** — add the import and override `getJSBundleFile()` inside your `DefaultReactNativeHost`. Pass the `invalidateReactHost` lambda so the controller can clear the cached `ReactHost` before reloading:
 
 ```kt
 import com.imcsorin.reactnativeota.ReactNativeOtaController
@@ -105,7 +97,9 @@ override fun getJSBundleFile(): String? =
   }
 ```
 
-### Manifest format
+</details>
+
+## Manifest format
 
 The manifest is a JSON file your CDN serves at `<publicUrlBase>/manifests/<platform>/<binaryVersion>.json`. The runtime only installs the bundle when `bundleVersion` is a non-negative integer strictly newer than whatever is currently running.
 
